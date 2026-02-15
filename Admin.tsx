@@ -122,11 +122,41 @@ const Admin: React.FC = () => {
     setPassword('');
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!data) return;
-    localStorage.setItem('site_data', JSON.stringify(data));
-    setHasChanges(false);
-    alert('הנתונים נשמרו בהצלחה!');
+    
+    try {
+      // שמירה דרך API (עובד ב-development וב-production עם serverless function)
+      const response = await fetch('/api/save-data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        // גם שמור ב-localStorage כגיבוי
+        localStorage.setItem('site_data', JSON.stringify(data));
+        setHasChanges(false);
+        
+        // שולח custom event לעדכן את האתר הראשי
+        window.dispatchEvent(new Event('siteDataUpdated'));
+        
+        alert('הנתונים נשמרו בהצלחה! כל המשתמשים יראו את השינויים.');
+      } else {
+        throw new Error(result.error || 'Failed to save');
+      }
+    } catch (error) {
+      console.error('Error saving data:', error);
+      // Fallback: שמירה ב-localStorage בלבד
+      localStorage.setItem('site_data', JSON.stringify(data));
+      setHasChanges(false);
+      window.dispatchEvent(new Event('siteDataUpdated'));
+      alert('הנתונים נשמרו ב-localStorage. שים לב: השינויים יראו רק לך עד רענון הדף.');
+    }
   };
 
   const updateData = (path: string, value: any) => {

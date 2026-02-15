@@ -90,26 +90,90 @@ const App: React.FC = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        // נסה לטעון מ-localStorage (שינויים לא שמורים)
-        const savedData = localStorage.getItem('site_data');
-        if (savedData) {
-          setData(JSON.parse(savedData));
-          setLoading(false);
-          return;
-        }
-        
-        // אחרת טען מ-JSON
-        const response = await fetch('/site-data.json');
+        // תמיד טען מ-JSON (הנתונים הרשמיים)
+        // הוסף timestamp למניעת cache
+        const response = await fetch(`/site-data.json?t=${Date.now()}`);
         const jsonData = await response.json();
         setData(jsonData);
       } catch (error) {
         console.error('Error loading data:', error);
+        // Fallback: נסה לטעון מ-localStorage אם JSON נכשל
+        const savedData = localStorage.getItem('site_data');
+        if (savedData) {
+          try {
+            setData(JSON.parse(savedData));
+          } catch (e) {
+            console.error('Error parsing localStorage data:', e);
+          }
+        }
       } finally {
         setLoading(false);
       }
     };
     
     loadData();
+
+    // מאזין לשינויים ב-localStorage (כשהנתונים משתנים בפורטל האדמין)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'site_data' && e.newValue) {
+        try {
+          setData(JSON.parse(e.newValue));
+        } catch (error) {
+          console.error('Error parsing updated data:', error);
+        }
+      }
+    };
+
+    // מאזין לשינויים ב-localStorage מאותו חלון (custom event)
+    const handleCustomStorageChange = () => {
+      const savedData = localStorage.getItem('site_data');
+      if (savedData) {
+        try {
+          setData(JSON.parse(savedData));
+        } catch (error) {
+          console.error('Error parsing updated data:', error);
+        }
+      }
+    };
+
+    // מאזין ל-storage events (עובד בין חלונות שונים)
+    window.addEventListener('storage', handleStorageChange);
+    
+    // מאזין ל-custom event (עובד באותו חלון)
+    window.addEventListener('siteDataUpdated', handleCustomStorageChange);
+
+    // Polling - בודק כל 5 שניות אם הנתונים ב-JSON השתנו
+    let lastDataHash = '';
+    const pollInterval = setInterval(async () => {
+      try {
+        const response = await fetch(`/site-data.json?t=${Date.now()}`);
+        const jsonData = await response.json();
+        const currentHash = JSON.stringify(jsonData);
+        
+        if (currentHash !== lastDataHash) {
+          lastDataHash = currentHash;
+          setData(jsonData);
+        }
+      } catch (error) {
+        // אם JSON לא נטען, נסה localStorage
+        const savedData = localStorage.getItem('site_data');
+        if (savedData && savedData !== lastDataHash) {
+          try {
+            const parsedData = JSON.parse(savedData);
+            lastDataHash = savedData;
+            setData(parsedData);
+          } catch (e) {
+            console.error('Error parsing data:', e);
+          }
+        }
+      }
+    }, 5000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('siteDataUpdated', handleCustomStorageChange);
+      clearInterval(pollInterval);
+    };
   }, []);
 
   if (loading || !data) {

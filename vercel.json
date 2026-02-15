@@ -8,5 +8,10 @@
       "source": "/admin/:path*",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "functions": {
+    "api/save-data.ts": {
+      "maxDuration": 10
+    }
+  }
 }
