@@ -37,5 +37,13 @@ export default defineConfig(({ mode }) => {
           '@': path.resolve(__dirname, '.'),
         }
       },
+      // Ensure all routes fallback to index.html for SPA routing
+      build: {
+        rollupOptions: {
+          input: {
+            main: './index.html',
+          }
+        }
+      }
     };
 });
