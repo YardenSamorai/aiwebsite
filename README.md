@@ -1,20 +1,146 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# שגיא סמוראי - אתר סרטוני AI
 
-# Run and deploy your AI Studio app
+אתר דף נחיתה מקצועי ליצירת סרטוני AI עם פורטל אדמין מלא לעריכת התוכן.
 
-This contains everything you need to run your app locally.
+## 🚀 תכונות
 
-View your app in AI Studio: https://ai.studio/apps/drive/1ln3LUZ70bXbGtkbMAT7eK3gyOKPBTP2P
+- **דף נחיתה מודרני** - עיצוב מקצועי ורספונסיבי
+- **פורטל אדמין** - ממשק עריכה מלא לכל התוכן באתר
+- **תיק עבודות** - תצוגת סרטוני YouTube
+- **ניהול תוכן דינמי** - עריכה, הוספה ומחיקה של כל הסעיפים
+- **אבטחה** - סיסמה מאובטחת דרך environment variables
 
-## Run Locally
+## 📋 דרישות
 
-**Prerequisites:**  Node.js
+- Node.js (גרסה 18 ומעלה)
+- npm או yarn
 
+## 🛠️ התקנה והרצה
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### 1. שכפול הפרויקט
+
+```bash
+git clone https://github.com/YardenSamorai/AI-website.git
+cd AI-website
+```
+
+### 2. התקנת תלויות
+
+```bash
+npm install
+```
+
+### 3. הגדרת משתני סביבה
+
+צור קובץ `.env` בהתבסס על `.env.example`:
+
+```bash
+cp .env.example .env
+```
+
+עדכן את הקובץ `.env` עם הערכים שלך:
+
+```env
+VITE_ADMIN_PASSWORD=YourSecurePasswordHere
+GEMINI_API_KEY=your_gemini_api_key_here
+```
+
+### 4. הרצת השרת
+
+```bash
+npm run dev
+```
+
+האתר יהיה זמין ב: `http://localhost:5005`
+
+## 🔐 פורטל אדמין
+
+### גישה לפורטל
+
+1. גש לכתובת: `http://localhost:5005/admin`
+2. הזן את הסיסמה (מוגדרת ב-`.env`)
+
+### מה אפשר לערוך בפורטל?
+
+- **סעיף ראשי** - כותרת, תת-כותרת וכפתורים
+- **תפריט עליון** - שם המותג וקישורי WhatsApp
+- **יתרונות** - הוספה, עריכה ומחיקה של יתרונות
+- **שירותים** - ניהול רשימת השירותים
+- **תהליך עבודה** - עריכת שלבי התהליך
+- **תיק עבודות** - הוספה/עריכה/מחיקה של סרטוני YouTube
+- **המלצות** - ניהול המלצות לקוחות
+- **שאלות נפוצות** - עריכת FAQ
+- **צור קשר** - פרטי יצירת קשר
+- **כותרות סעיפים** - עריכת כל הכותרות באתר
+
+### שמירת שינויים
+
+לאחר ביצוע שינויים בפורטל האדמין:
+1. לחץ על כפתור **"שמור"** בחלק העליון
+2. השינויים נשמרים ב-localStorage
+3. הדף הראשי מתעדכן אוטומטית
+
+**הערה:** לשימור קבוע, עדכן את `public/site-data.json` ידנית או הוסף backend לשמירה במסד נתונים.
+
+## 📁 מבנה הפרויקט
+
+```
+AI-website/
+├── public/
+│   ├── site-data.json      # קובץ הנתונים הראשי
+│   └── videos/             # תיקיית סרטונים (אופציונלי)
+├── src/
+│   ├── App.tsx             # קומפוננטת האתר הראשית
+│   ├── Admin.tsx            # פורטל האדמין
+│   └── index.tsx            # נקודת הכניסה
+├── .env                     # משתני סביבה (לא נשמר ב-Git)
+├── .env.example             # דוגמה למשתני סביבה
+├── vite.config.ts           # הגדרות Vite
+└── package.json             # תלויות הפרויקט
+```
+
+## 🔒 אבטחה
+
+- הסיסמה נשמרת ב-`.env` (לא נשמרת ב-Git)
+- קובץ `.env` מופיע ב-`.gitignore`
+- הסיסמה לא מופיעה בקונסול או בקוד המקור
+- מומלץ לשנות את הסיסמה לפני העלאה לייצור
+
+## 📝 סקריפטים זמינים
+
+- `npm run dev` - הרצת השרת בפיתוח (פורט 5005)
+- `npm run build` - בניית הפרויקט לייצור
+- `npm run preview` - תצוגה מקדימה של הבנייה
+
+## 🌐 פריסה
+
+לפריסה לייצור:
+
+1. בנה את הפרויקט:
+   ```bash
+   npm run build
+   ```
+
+2. העלה את תיקיית `dist` לשרת האירוח שלך
+
+3. ודא שקובץ `.env` מוגדר בשרת עם הערכים הנכונים
+
+## 📚 טכנולוגיות
+
+- **React 19** - ספריית UI
+- **TypeScript** - טיפוסים סטטיים
+- **Vite** - כלי בנייה מהיר
+- **Tailwind CSS** - עיצוב מודרני
+- **Lucide React** - אייקונים
+
+## 📄 רישיון
+
+כל הזכויות שמורות לשגיא סמוראי © 2024
+
+## 🤝 תמיכה
+
+לשאלות או בעיות, צור issue ב-GitHub או צור קשר דרך האתר.
+
+---
+
+**נוצר באהבה באמצעות AI לעולם שכולו דמיון** ✨
