@@ -1,146 +1,137 @@
-# שגיא סמוראי - אתר סרטוני AI
+# AI Video Production Website
 
-אתר דף נחיתה מקצועי ליצירת סרטוני AI עם פורטל אדמין מלא לעריכת התוכן.
+A modern, professional landing page for AI video production services with a comprehensive admin panel for content management.
 
-## 🚀 תכונות
+## ✨ Features
 
-- **דף נחיתה מודרני** - עיצוב מקצועי ורספונסיבי
-- **פורטל אדמין** - ממשק עריכה מלא לכל התוכן באתר
-- **תיק עבודות** - תצוגת סרטוני YouTube
-- **ניהול תוכן דינמי** - עריכה, הוספה ומחיקה של כל הסעיפים
-- **אבטחה** - סיסמה מאובטחת דרך environment variables
+- 🎨 **Modern Landing Page** - Professional, responsive design
+- 🔐 **Admin Panel** - Full content management system
+- 🎬 **Portfolio Gallery** - YouTube video integration
+- 📝 **Dynamic Content** - Edit, add, and remove all sections
+- 🔒 **Secure Authentication** - Password-protected admin access
+- 📱 **Fully Responsive** - Works on all devices
 
-## 📋 דרישות
+## 🚀 Quick Start
 
-- Node.js (גרסה 18 ומעלה)
-- npm או yarn
+### Prerequisites
 
-## 🛠️ התקנה והרצה
+- Node.js 18+ 
+- npm or yarn
 
-### 1. שכפול הפרויקט
+### Installation
 
+1. Clone the repository:
 ```bash
 git clone https://github.com/YardenSamorai/AI-website.git
 cd AI-website
 ```
 
-### 2. התקנת תלויות
-
+2. Install dependencies:
 ```bash
 npm install
 ```
 
-### 3. הגדרת משתני סביבה
-
-צור קובץ `.env` בהתבסס על `.env.example`:
-
+3. Set up environment variables:
 ```bash
 cp .env.example .env
 ```
 
-עדכן את הקובץ `.env` עם הערכים שלך:
-
+Edit `.env` and add your credentials:
 ```env
 VITE_ADMIN_PASSWORD=YourSecurePasswordHere
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-### 4. הרצת השרת
-
+4. Run the development server:
 ```bash
 npm run dev
 ```
 
-האתר יהיה זמין ב: `http://localhost:5005`
+The website will be available at `http://localhost:5005`
 
-## 🔐 פורטל אדמין
+## 🔐 Admin Panel
 
-### גישה לפורטל
+Access the admin panel at: `http://localhost:5005/admin`
 
-1. גש לכתובת: `http://localhost:5005/admin`
-2. הזן את הסיסמה (מוגדרת ב-`.env`)
+### What You Can Edit
 
-### מה אפשר לערוך בפורטל?
+- **Hero Section** - Main title, subtitle, and CTAs
+- **Navigation** - Brand name and WhatsApp links
+- **Benefits** - Add, edit, or remove benefit cards
+- **Services** - Manage service offerings
+- **Process Steps** - Edit workflow steps
+- **Portfolio** - Add/edit/remove YouTube videos
+- **Testimonials** - Manage customer reviews
+- **FAQs** - Edit frequently asked questions
+- **Contact Info** - Update contact details
+- **Section Headers** - Customize all section titles
 
-- **סעיף ראשי** - כותרת, תת-כותרת וכפתורים
-- **תפריט עליון** - שם המותג וקישורי WhatsApp
-- **יתרונות** - הוספה, עריכה ומחיקה של יתרונות
-- **שירותים** - ניהול רשימת השירותים
-- **תהליך עבודה** - עריכת שלבי התהליך
-- **תיק עבודות** - הוספה/עריכה/מחיקה של סרטוני YouTube
-- **המלצות** - ניהול המלצות לקוחות
-- **שאלות נפוצות** - עריכת FAQ
-- **צור קשר** - פרטי יצירת קשר
-- **כותרות סעיפים** - עריכת כל הכותרות באתר
+Changes are saved to localStorage and reflected immediately on the main site.
 
-### שמירת שינויים
-
-לאחר ביצוע שינויים בפורטל האדמין:
-1. לחץ על כפתור **"שמור"** בחלק העליון
-2. השינויים נשמרים ב-localStorage
-3. הדף הראשי מתעדכן אוטומטית
-
-**הערה:** לשימור קבוע, עדכן את `public/site-data.json` ידנית או הוסף backend לשמירה במסד נתונים.
-
-## 📁 מבנה הפרויקט
+## 📁 Project Structure
 
 ```
 AI-website/
 ├── public/
-│   ├── site-data.json      # קובץ הנתונים הראשי
-│   └── videos/             # תיקיית סרטונים (אופציונלי)
+│   ├── site-data.json      # Main content data file
+│   └── videos/             # Video assets (optional)
 ├── src/
-│   ├── App.tsx             # קומפוננטת האתר הראשית
-│   ├── Admin.tsx            # פורטל האדמין
-│   └── index.tsx            # נקודת הכניסה
-├── .env                     # משתני סביבה (לא נשמר ב-Git)
-├── .env.example             # דוגמה למשתני סביבה
-├── vite.config.ts           # הגדרות Vite
-└── package.json             # תלויות הפרויקט
+│   ├── App.tsx             # Main website component
+│   ├── Admin.tsx           # Admin panel component
+│   └── index.tsx           # Entry point
+├── .env                    # Environment variables (not in Git)
+├── .env.example            # Environment template
+├── vite.config.ts          # Vite configuration
+└── package.json            # Dependencies
 ```
 
-## 🔒 אבטחה
+## 🛠️ Available Scripts
 
-- הסיסמה נשמרת ב-`.env` (לא נשמרת ב-Git)
-- קובץ `.env` מופיע ב-`.gitignore`
-- הסיסמה לא מופיעה בקונסול או בקוד המקור
-- מומלץ לשנות את הסיסמה לפני העלאה לייצור
+- `npm run dev` - Start development server (port 5005)
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
 
-## 📝 סקריפטים זמינים
+## 🔒 Security
 
-- `npm run dev` - הרצת השרת בפיתוח (פורט 5005)
-- `npm run build` - בניית הפרויקט לייצור
-- `npm run preview` - תצוגה מקדימה של הבנייה
+- Admin password stored in `.env` (not committed to Git)
+- `.env` file is in `.gitignore`
+- Password never appears in console or source code
+- Change default password before production deployment
 
-## 🌐 פריסה
+## 🌐 Deployment
 
-לפריסה לייצור:
+1. Build the project:
+```bash
+npm run build
+```
 
-1. בנה את הפרויקט:
-   ```bash
-   npm run build
-   ```
+2. Deploy the `dist` folder to your hosting provider
 
-2. העלה את תיקיית `dist` לשרת האירוח שלך
+3. Ensure `.env` file is configured on the server with correct values
 
-3. ודא שקובץ `.env` מוגדר בשרת עם הערכים הנכונים
+## 🛡️ Environment Variables
 
-## 📚 טכנולוגיות
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `VITE_ADMIN_PASSWORD` | Admin panel password | Yes |
+| `GEMINI_API_KEY` | Gemini API key | Optional |
 
-- **React 19** - ספריית UI
-- **TypeScript** - טיפוסים סטטיים
-- **Vite** - כלי בנייה מהיר
-- **Tailwind CSS** - עיצוב מודרני
-- **Lucide React** - אייקונים
+## 📚 Tech Stack
 
-## 📄 רישיון
+- **React 19** - UI library
+- **TypeScript** - Type safety
+- **Vite** - Build tool
+- **Tailwind CSS** - Styling
+- **Lucide React** - Icons
 
-כל הזכויות שמורות לשגיא סמוראי © 2024
+## 📝 License
 
-## 🤝 תמיכה
+All rights reserved © 2024
 
-לשאלות או בעיות, צור issue ב-GitHub או צור קשר דרך האתר.
+## 🤝 Contributing
+
+This is a private project. For issues or questions, please open an issue on GitHub.
 
 ---
 
-**נוצר באהבה באמצעות AI לעולם שכולו דמיון** ✨
+Made with ❤️ using AI
