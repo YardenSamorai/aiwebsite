@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Video, 
   Zap, 
@@ -9,7 +9,9 @@ import {
   CheckCircle, 
   Star, 
   ChevronDown, 
-  ChevronUp, 
+  ChevronUp,
+  ChevronLeft,
+  ChevronRight,
   Send, 
   Phone, 
   Mail, 
@@ -86,6 +88,16 @@ const App: React.FC = () => {
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [data, setData] = useState<SiteData | null>(null);
   const [loading, setLoading] = useState(true);
+  const testimonialsRef = useRef<HTMLDivElement>(null);
+
+  const scrollTestimonials = (direction: 'left' | 'right') => {
+    if (!testimonialsRef.current) return;
+    const scrollAmount = 420;
+    testimonialsRef.current.scrollBy({
+      left: direction === 'left' ? -scrollAmount : scrollAmount,
+      behavior: 'smooth'
+    });
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -447,8 +459,12 @@ const App: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6">
           <SectionHeader title={data.sections.testimonials.title} />
         </div>
-        <div className="relative">
-          <div className="flex gap-6 overflow-x-auto pb-6 px-6 md:px-12 scrollbar-hide snap-x snap-mandatory" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <div className="relative group/carousel">
+          <div
+            ref={testimonialsRef}
+            className="flex gap-6 overflow-x-auto pb-4 px-6 md:px-12 snap-x snap-mandatory cursor-grab active:cursor-grabbing"
+            style={{ scrollbarWidth: 'thin', scrollbarColor: '#4f46e5 #1e1e1e' }}
+          >
             {data.testimonials.map((t, idx) => (
               <div key={idx} className="glass-card p-8 rounded-2xl relative flex-shrink-0 w-[340px] md:w-[400px] snap-start flex flex-col justify-between">
                 <div>
@@ -469,11 +485,22 @@ const App: React.FC = () => {
               </div>
             ))}
           </div>
-          <div className="absolute left-0 top-0 bottom-6 w-12 bg-gradient-to-r from-[#0e0e0e] to-transparent pointer-events-none"></div>
-          <div className="absolute right-0 top-0 bottom-6 w-12 bg-gradient-to-l from-[#0e0e0e] to-transparent pointer-events-none"></div>
-        </div>
-        <div className="text-center mt-4">
-          <p className="text-gray-600 text-sm">גללו לצדדים לעוד המלצות</p>
+          <button
+            onClick={() => scrollTestimonials('right')}
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-full shadow-lg shadow-black/30 transition-all z-10"
+            aria-label="הקודם"
+          >
+            <ChevronLeft size={24} />
+          </button>
+          <button
+            onClick={() => scrollTestimonials('left')}
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-full shadow-lg shadow-black/30 transition-all z-10"
+            aria-label="הבא"
+          >
+            <ChevronRight size={24} />
+          </button>
+          <div className="absolute left-0 top-0 bottom-4 w-12 bg-gradient-to-r from-[#0e0e0e] to-transparent pointer-events-none"></div>
+          <div className="absolute right-0 top-0 bottom-4 w-12 bg-gradient-to-l from-[#0e0e0e] to-transparent pointer-events-none"></div>
         </div>
       </section>
 
