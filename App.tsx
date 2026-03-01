@@ -73,7 +73,7 @@ interface SiteData {
   benefits: Array<{ title: string; description: string }>;
   services: Array<{ id: string; title: string; description: string }>;
   process: Array<{ step: string; title: string; desc: string }>;
-  portfolio: Array<{ youtubeUrl: string; title: string; category: string }>;
+  portfolio: Array<{ youtubeUrl: string; title: string; category: string; description?: string }>;
   testimonials: Array<{ name: string; role: string; content: string }>;
   faqs: Array<{ question: string; answer: string }>;
   contact: { title: string; titleHighlight: string; description: string; phone: string; email: string; whatsappLink: string; socialLinks: { instagram: string; facebook: string; linkedin: string } };
@@ -258,6 +258,50 @@ const App: React.FC = () => {
         </div>
       </section>
 
+      {/* Lead Form Section */}
+      <section className="py-20 px-6 bg-gradient-to-b from-[#0e0e0e] to-black relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/20 via-transparent to-transparent"></div>
+        <div className="max-w-2xl mx-auto relative z-10">
+          <div className="glass-card p-8 md:p-12 rounded-3xl border border-indigo-500/20 shadow-2xl shadow-indigo-500/5">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl md:text-4xl font-bold mb-3">רוצים לשמוע עוד?</h2>
+              <p className="text-gray-400 text-lg">השאירו פרטים ונחזור אליכם בהקדם</p>
+            </div>
+            <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium mr-2">שם מלא</label>
+                  <input type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-indigo-500 outline-none transition" placeholder="השם שלכם" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium mr-2">טלפון</label>
+                  <input type="tel" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-indigo-500 outline-none transition" placeholder="050-0000000" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium mr-2">אימייל (אופציונלי)</label>
+                <input type="email" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-indigo-500 outline-none transition" placeholder="your@email.com" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium mr-2">מה מעניין אתכם?</label>
+                <select className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-indigo-500 outline-none transition appearance-none">
+                  <option className="bg-black" value="">בחרו נושא...</option>
+                  <option className="bg-black">סרטון לאירוע (חתונה / בר מצווה / יום הולדת)</option>
+                  <option className="bg-black">סרטון פרסומי לעסק</option>
+                  <option className="bg-black">סרטון הנצחה</option>
+                  <option className="bg-black">סרטון חלומי / אמנותי</option>
+                  <option className="bg-black">אחר</option>
+                </select>
+              </div>
+              <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-500/20 transition-all transform hover:scale-[1.02] flex justify-center items-center gap-2 text-lg">
+                <Send size={20} />
+                <span>שלחו לי פרטים</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
       {/* Services Section */}
       <section id="services" className="py-24 px-6 bg-black">
         <div className="max-w-7xl mx-auto">
@@ -305,41 +349,56 @@ const App: React.FC = () => {
 
       {/* Gallery Section */}
       <section id="gallery" className="py-24 px-6 bg-black">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <SectionHeader title={data.sections.gallery.title} subtitle={data.sections.gallery.subtitle} />
           {data.portfolio.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="space-y-20">
                 {data.portfolio.map((project, i) => {
                   const videoId = getYouTubeId(project.youtubeUrl);
                   const thumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : '';
+                  const isEven = i % 2 === 0;
                   
                   return (
                     <div 
                       key={i} 
-                      className="group relative aspect-video rounded-2xl overflow-hidden glass-card cursor-pointer"
-                      onClick={() => setSelectedVideo(project.youtubeUrl)}
+                      className={`flex flex-col ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} gap-8 md:gap-12 items-center`}
                     >
-                      <img 
-                        src={thumbnail}
-                        alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-                        onError={(e) => {
-                          // Fallback אם התמונה לא נטענה
-                          const target = e.target as HTMLImageElement;
-                          if (videoId) {
-                            target.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-                          }
-                        }}
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="bg-white/20 backdrop-blur-md p-4 rounded-full group-hover:scale-125 transition duration-300 border border-white/30">
-                          <Play fill="white" className="text-white" size={32} />
+                      <div 
+                        className="w-full md:w-3/5 group relative aspect-video rounded-2xl overflow-hidden glass-card cursor-pointer shrink-0"
+                        onClick={() => setSelectedVideo(project.youtubeUrl)}
+                      >
+                        <img 
+                          src={thumbnail}
+                          alt={project.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            if (videoId) {
+                              target.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                            }
+                          }}
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="bg-white/20 backdrop-blur-md p-4 rounded-full group-hover:scale-125 transition duration-300 border border-white/30">
+                            <Play fill="white" className="text-white" size={32} />
+                          </div>
                         </div>
                       </div>
-                      <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
-                        <p className="font-bold text-lg">{project.title}</p>
-                        <p className="text-sm text-gray-300">{project.category}</p>
+
+                      <div className="w-full md:w-2/5 text-right">
+                        <span className="inline-block text-sm font-medium text-indigo-400 bg-indigo-500/10 px-4 py-1 rounded-full mb-4">{project.category}</span>
+                        <h3 className="text-2xl md:text-3xl font-bold mb-4">{project.title}</h3>
+                        {project.description && (
+                          <p className="text-gray-400 text-lg leading-relaxed mb-6">{project.description}</p>
+                        )}
+                        <button
+                          onClick={() => setSelectedVideo(project.youtubeUrl)}
+                          className="inline-flex items-center gap-2 text-indigo-400 font-bold hover:text-indigo-300 transition"
+                        >
+                          <Play size={18} className="rotate-180" />
+                          <span>צפו בסרטון</span>
+                        </button>
                       </div>
                     </div>
                   );
@@ -384,18 +443,24 @@ const App: React.FC = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-24 px-6 bg-[#0e0e0e]">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-24 bg-[#0e0e0e]">
+        <div className="max-w-7xl mx-auto px-6">
           <SectionHeader title={data.sections.testimonials.title} />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        </div>
+        <div className="relative">
+          <div className="flex gap-6 overflow-x-auto pb-6 px-6 md:px-12 scrollbar-hide snap-x snap-mandatory" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {data.testimonials.map((t, idx) => (
-              <div key={idx} className="glass-card p-8 rounded-2xl relative">
-                <div className="flex gap-1 mb-6">
-                  {[...Array(5)].map((_, i) => <Star key={i} size={16} className="text-yellow-500 fill-yellow-500" />)}
+              <div key={idx} className="glass-card p-8 rounded-2xl relative flex-shrink-0 w-[340px] md:w-[400px] snap-start flex flex-col justify-between">
+                <div>
+                  <div className="flex gap-1 mb-5">
+                    {[...Array(5)].map((_, i) => <Star key={i} size={16} className="text-yellow-500 fill-yellow-500" />)}
+                  </div>
+                  <p className="text-gray-300 mb-8 italic leading-relaxed">"{t.content}"</p>
                 </div>
-                <p className="text-lg text-gray-300 mb-8 italic">"{t.content}"</p>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500"></div>
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg shrink-0">
+                    {t.name.charAt(0)}
+                  </div>
                   <div>
                     <div className="font-bold">{t.name}</div>
                     <div className="text-sm text-gray-500">{t.role}</div>
@@ -404,6 +469,11 @@ const App: React.FC = () => {
               </div>
             ))}
           </div>
+          <div className="absolute left-0 top-0 bottom-6 w-12 bg-gradient-to-r from-[#0e0e0e] to-transparent pointer-events-none"></div>
+          <div className="absolute right-0 top-0 bottom-6 w-12 bg-gradient-to-l from-[#0e0e0e] to-transparent pointer-events-none"></div>
+        </div>
+        <div className="text-center mt-4">
+          <p className="text-gray-600 text-sm">גללו לצדדים לעוד המלצות</p>
         </div>
       </section>
 
@@ -436,30 +506,34 @@ const App: React.FC = () => {
       <section id="contact" className="py-24 px-6 bg-gradient-to-b from-[#0e0e0e] to-black">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
           <div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-8">{data.contact.title} <br/><span className="gradient-text">{data.contact.titleHighlight}</span></h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">{data.contact.title} <br/><span className="gradient-text">{data.contact.titleHighlight}</span></h2>
             <p className="text-gray-400 text-lg mb-12 max-w-md leading-relaxed">
               {data.contact.description}
             </p>
             <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="bg-indigo-500/10 p-4 rounded-xl text-indigo-400"><Phone size={24}/></div>
+              <a href={`tel:${data.contact.phone}`} className="flex items-center gap-4 group">
+                <div className="bg-indigo-500/10 p-4 rounded-xl text-indigo-400 group-hover:bg-indigo-500/20 transition"><Phone size={24}/></div>
                 <div>
                   <div className="text-sm text-gray-500">טלפון</div>
-                  <div className="text-lg font-bold">{data.contact.phone}</div>
+                  <div className="text-lg font-bold group-hover:text-indigo-400 transition">{data.contact.phone}</div>
                 </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="bg-indigo-500/10 p-4 rounded-xl text-indigo-400"><Mail size={24}/></div>
+              </a>
+              <a href={`mailto:${data.contact.email}`} className="flex items-center gap-4 group">
+                <div className="bg-indigo-500/10 p-4 rounded-xl text-indigo-400 group-hover:bg-indigo-500/20 transition"><Mail size={24}/></div>
                 <div>
                   <div className="text-sm text-gray-500">אימייל</div>
-                  <div className="text-lg font-bold">{data.contact.email}</div>
+                  <div className="text-lg font-bold group-hover:text-indigo-400 transition">{data.contact.email}</div>
                 </div>
-              </div>
-              <div className="pt-8 flex gap-4">
-                <a href={data.contact.socialLinks.instagram} className="p-3 bg-white/5 rounded-full hover:bg-indigo-500 transition"><Instagram size={20}/></a>
-                <a href={data.contact.socialLinks.facebook} className="p-3 bg-white/5 rounded-full hover:bg-indigo-500 transition"><Facebook size={20}/></a>
-                <a href={data.contact.socialLinks.linkedin} className="p-3 bg-white/5 rounded-full hover:bg-indigo-500 transition"><Linkedin size={20}/></a>
-              </div>
+              </a>
+              <a href={data.contact.whatsappLink} target="_blank" className="flex items-center gap-4 group">
+                <div className="bg-green-500/10 p-4 rounded-xl text-green-400 group-hover:bg-green-500/20 transition">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-500">WhatsApp</div>
+                  <div className="text-lg font-bold group-hover:text-green-400 transition">שלחו לנו הודעה</div>
+                </div>
+              </a>
             </div>
           </div>
 
@@ -468,7 +542,7 @@ const App: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-medium mr-2">שם מלא</label>
-                  <input type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-indigo-500 outline-none transition" placeholder="ישראל ישראלי" />
+                  <input type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-indigo-500 outline-none transition" placeholder="השם שלכם" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium mr-2">טלפון</label>
@@ -480,37 +554,25 @@ const App: React.FC = () => {
                 <input type="email" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-indigo-500 outline-none transition" placeholder="your@email.com" />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium mr-2">סוג הסרטון</label>
+                <label className="text-sm font-medium mr-2">סוג הסרט</label>
                 <select className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-indigo-500 outline-none transition appearance-none">
-                  <option className="bg-black">בחרו את סוג הסרטון...</option>
+                  <option className="bg-black" value="">בחרו סוג סרט...</option>
                   <option className="bg-black">סרטון פרסומי לעסק</option>
-                  <option className="bg-black">אירוע משפחתי (בר מצווה/יומולדת)</option>
+                  <option className="bg-black">אירוע משפחתי (חתונה / בר מצווה / יום הולדת)</option>
                   <option className="bg-black">סרטון הנצחה</option>
-                  <option className="bg-black">סרטון חלומי/אמנותי</option>
+                  <option className="bg-black">סרטון חלומי / אמנותי</option>
                   <option className="bg-black">אחר</option>
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium mr-2">תיאור הרעיון / המטרה</label>
-                <textarea rows={4} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-indigo-500 outline-none transition" placeholder="ספרו לי מה אתם מדמיינים..."></textarea>
+                <label className="text-sm font-medium mr-2">מה עוד תרצו שנדע?</label>
+                <textarea rows={4} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-indigo-500 outline-none transition" placeholder="ספרו לנו עוד על מה שאתם מחפשים..."></textarea>
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium mr-2">תקציב משוער (אופציונלי)</label>
-                <input type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-indigo-500 outline-none transition" placeholder="לדוגמה: 1,500 - 3,000 ש״ח" />
-              </div>
-              <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg transition flex justify-center items-center gap-2">
+              <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-500/20 transition-all transform hover:scale-[1.02] flex justify-center items-center gap-2 text-lg">
                 <Send size={20} />
-                <span>שלחו בקשה להצעת מחיר</span>
+                <span>בואו נדבר</span>
               </button>
             </form>
-            
-            <div className="mt-8 pt-8 border-t border-white/10 text-center">
-              <p className="text-gray-400 mb-4">או פשוט דברו איתי ישירות:</p>
-              <a href={data.contact.whatsappLink} className="inline-flex items-center gap-3 bg-green-600/10 hover:bg-green-600/20 text-green-500 border border-green-500/20 px-8 py-3 rounded-xl transition font-bold">
-                <Phone size={20} />
-                <span>לשיחה מהירה ב-WhatsApp</span>
-              </a>
-            </div>
           </div>
         </div>
       </section>
